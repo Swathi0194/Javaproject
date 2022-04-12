@@ -1,0 +1,28 @@
+---
+- hosts: dev
+  become: yes
+  tasks:
+    - name: install python
+      yum: 
+       name: python-pip 
+       state: present
+    - name: install docker
+      yum:
+       name: docker
+       state: present
+    - name: statrt docker
+      service:
+       name: docker
+       state: started
+       enabled: yes
+    - name: install docker py
+      pip: 
+       name: docker-py
+       state: present
+    - name: start container
+      docker_container:
+       name: ansible
+       image: "kiddu143/ansible:{{DOCKER_TAG}}"
+       state: started
+       published_ports: 
+           - 0.0.0.0:8080:8080
